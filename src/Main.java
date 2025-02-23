@@ -1,8 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
 
 public class Main {
     static int N, M, P;
@@ -13,8 +16,11 @@ public class Main {
     static int casesExamined = 0;
 
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Masukkan nama file: ");
+        String filePath = scan.nextLine();
         try {
-            readFile("filetesting.txt");
+            readFile("../test/" + filePath);    
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -25,7 +31,7 @@ public class Main {
             }
         }
         solve();
-        printBoard();
+        scan.close();
     }
 
     public static void readFile(String fileName) throws FileNotFoundException {
@@ -128,6 +134,7 @@ public class Main {
     public static void solve() {
         long startTime = System.currentTimeMillis();
         if (solveHelper(0)) {
+            solved = true;
             System.out.println("Solution found.");
         } else {
             System.out.println("No solution found.");
@@ -136,6 +143,8 @@ public class Main {
         long duration = endTime - startTime;
         System.out.println("\nSearch time: " + duration + " ms");
         System.out.println("Cases examined: " + casesExamined);
+        printBoard();
+        saveToFile(solved, duration);
     }
     
     public static boolean solveHelper(int pieceIdx) {
@@ -199,5 +208,44 @@ public class Main {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public static void saveToFile(boolean found, long duration) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Apakah ingin menyimpan? (y/n): ");
+        String save = scan.nextLine();
+        if (!save.equals("y")) {
+            return;
+        }
+        System.out.println("Masukkan nama file untuk menyimpan: ");
+        String fileName = scan.nextLine();
+        String result = StrBuild(found, duration);
+        try {
+            FileWriter writer = new FileWriter("../test/" + fileName);
+            writer.write(result);
+            writer.close();
+            System.out.println("Hasil berhasil disimpan ke file " + fileName);
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat menyimpan jawaban.");
+            e.printStackTrace();
+        }
+    }
+
+    public static String StrBuild(boolean found, long duration) {
+        StringBuilder result = new StringBuilder();
+        if (found) {
+            result.append("Solution found.\n");
+        } else {
+            result.append("Solution not found.\n");
+        }
+        result.append("Search time: " + duration + " ms\n");
+        result.append("Cases examined: " + casesExamined + "\n\n");
+        for (int u = 0; u < N; u++) {
+            for (int v = 0; v < M; v++) {
+                result.append(board[u][v]);
+            }
+            result.append("\n");
+        }
+        return result.toString();
     }
 }
