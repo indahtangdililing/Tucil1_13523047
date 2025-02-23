@@ -1,0 +1,9 @@
+Solution found.
+Search time: 334 ms
+Cases examined: 7008357
+
+FFDDDEE
+FFDADDD
+FFAAABB
+FCCABBB
+FFCCCCC

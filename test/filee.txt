@@ -1,0 +1,7 @@
+Solution found.
+Search time: 0 ms
+Cases examined: 8
+
+AAA
+AAA
+BBB
